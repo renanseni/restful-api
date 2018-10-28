@@ -26,6 +26,7 @@ namespace restful_api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IMathService, MathService>();
+            services.AddScoped<IPersonService, PersonService>();
             services.AddMvc();
         }
 
