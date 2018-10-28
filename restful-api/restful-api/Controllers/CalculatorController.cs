@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using restful_api.Interfaces;
+using restful_api.Services;
 
 namespace restful_api.Controllers
 {
@@ -6,34 +8,49 @@ namespace restful_api.Controllers
     [Route("api/Calculator")]
     public class CalculatorController : Controller
     {
-        [HttpGet("{firstNumber}/{secondNumber}")]
+        private IMathService MathService;
+        public CalculatorController(IMathService mathService)
+        {
+            MathService = mathService;
+        }
+        [HttpGet("sum/{firstNumber}/{secondNumber}")]
         public IActionResult Sum(string firstNumber, string secondNumber)
         {
 
-            if (isNumeric(firstNumber) && isNumeric(secondNumber))
+            if (MathService.IsNumeric(firstNumber) && MathService.IsNumeric(secondNumber))
             {
-                var sum = ConvertToDecimal(firstNumber) + ConvertToDecimal(secondNumber);
+                var sum = MathService.ConvertToDecimal(firstNumber) + MathService.ConvertToDecimal(secondNumber);
                 return Ok(sum.ToString());
             }
 
-            return BadRequest("");
+            return BadRequest("Invalid Request");
         }
 
-        private decimal ConvertToDecimal(string number)
+        [HttpGet("sub/{firstNumber}/{secondNumber}")]
+        public IActionResult Subtraction(string firstNumber, string secondNumber)
         {
-            decimal decimalValue;
-            if (decimal.TryParse(number, out decimalValue))
+
+            if (MathService.IsNumeric(firstNumber) && MathService.IsNumeric(secondNumber))
             {
-                return decimalValue;
+                var sum = MathService.ConvertToDecimal(firstNumber) - MathService.ConvertToDecimal(secondNumber);
+                return Ok(sum.ToString());
             }
 
-            return 0;
+            return BadRequest("Invalid Request");
         }
 
-        private bool isNumeric(string strNumber)
+        [HttpGet("multiplication/{firstNumber}/{secondNumber}")]
+        public IActionResult Multiplication(string firstNumber, string secondNumber)
         {
-            double number;
-            return double.TryParse(strNumber, System.Globalization.NumberStyles.Any, System.Globalization.NumberFormatInfo.InvariantInfo, out number);
+
+            if (MathService.IsNumeric(firstNumber) && MathService.IsNumeric(secondNumber))
+            {
+                var sum = MathService.ConvertToDecimal(firstNumber) * MathService.ConvertToDecimal(secondNumber);
+                return Ok(sum.ToString());
+            }
+
+            return BadRequest("Invalid Request");
         }
+
     }
 }
